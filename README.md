@@ -1,6 +1,6 @@
 # speech-to-text
 
-Dependent libraries
+Dependent libraries:\n
 PyAudio==0.2.11
 SpeechRecognition==3.8.1
 Wave==0.0.2
