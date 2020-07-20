@@ -2,6 +2,8 @@ import pyaudio
 import wave
 import speech_recognition as sr
 import http.client
+import json
+import requests
 from array import array
 from datetime import datetime
 
@@ -11,6 +13,12 @@ FORMAT = pyaudio.paInt16
 CHANNELS = 2
 RATE = 44100
 RECORD_SECONDS = 5
+URL = ''
+
+with open('./config.json') as f:
+  data = json.load(f)
+  URL = data['LOCAL_URL']
+  print(type(data))
 
 def record():
 
@@ -56,25 +64,50 @@ def record_to_file(file_path):
 	wf.writeframes(b''.join(frames))
 	wf.close()
 
+def create_card(name, description):
+	print(name)
+	print(description)
+	r = requests.post(URL+'/api/trello/createCard', data = {'name': name,'description': description})
+	print(r)
+
 def convert_to_text(file_path):
 	filename = file_path
 	f = open('text.txt', 'w')
 	r = sr.Recognizer()
+	text = ''
 	with sr.AudioFile(filename) as source:
 		audio_data = r.record(source)
 		text = r.recognize_google(audio_data)
 		f.write(text)
 	f.close()
+	#Pending text classification
+	words = text.split(' ')
+	if words[0] == 'create':
+		if words[1] == 'card':
+			description_flag = False 
+			name_flag = False
+			description = ''
+			name = ''
+			for i in range(2,len(words)):
+				if name_flag == True:
+					name += words[i]
+					name += ' '
+				if description_flag == True:
+					description += words[i]
+					description += ' '
+				if words[i] == 'is':
+					if words[i-1] == 'name':
+						name_flag = True
+				if words[i] == 'description':
+					description_flag = True
+			create_card(name, description)
 
-def create_card():
-	conn = http.client.HTTPConnection('localhost',8000)
-	conn.request('GET', '/api/trello/searchCard')
-	r = conn.getresponse()
-	print(r.read())
+
+
 
 if __name__ == '__main__':
 	print('#' * 80)
-	create_card()
+	#create_card()
 	print('Please select the input method\n1. Record voice\n2. Pass recorded file\n3. Exit')
 	choice = int(input())
 	print (type(choice))

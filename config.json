@@ -1,0 +1,4 @@
+{
+    "LOCAL_URL": "http://localhost:8000",
+    "HEROKU_URL" : "http://trello-api-node.herokuapp.com"
+}
