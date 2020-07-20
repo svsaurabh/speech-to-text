@@ -1,6 +1,7 @@
 import pyaudio
 import wave
 import speech_recognition as sr
+import http.client
 from array import array
 from datetime import datetime
 
@@ -55,8 +56,8 @@ def record_to_file(file_path):
 	wf.writeframes(b''.join(frames))
 	wf.close()
 
-def convert_to_text():
-	filename = "output.wav"
+def convert_to_text(file_path):
+	filename = file_path
 	f = open('text.txt', 'w')
 	r = sr.Recognizer()
 	with sr.AudioFile(filename) as source:
@@ -65,13 +66,28 @@ def convert_to_text():
 		f.write(text)
 	f.close()
 
+def create_card():
+	conn = http.client.HTTPConnection('localhost',8000)
+	conn.request('GET', '/api/trello/searchCard')
+	r = conn.getresponse()
+	print(r.read())
+
 if __name__ == '__main__':
 	print('#' * 80)
-	print("Please speak word(s) into the microphone")
-	print('Press Ctrl+C to stop the recording')
-	
-	record_to_file('output.wav')
-	
-	print("Result written to output.wav")
-	convert_to_text()
+	create_card()
+	print('Please select the input method\n1. Record voice\n2. Pass recorded file\n3. Exit')
+	choice = int(input())
+	print (type(choice))
+	if choice == 3:
+		exit()
+	if choice == 2:
+		print('Please specify the file path with .wav extention')
+		file_path = 'G:\Working\output.wav'#input()
+	else :
+		print("Please speak word(s) into the microphone")
+		print('Press Ctrl+C to stop the recording')
+		record_to_file('output.wav')	
+		print("Result written to output.wav")
+		file_path = './output.wav'
+	convert_to_text(file_path)
 	print('#' * 80)
