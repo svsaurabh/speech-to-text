@@ -14,11 +14,13 @@ CHANNELS = 2
 RATE = 44100
 RECORD_SECONDS = 5
 URL = ''
+BOARD_ID = ''
 
 with open('./config.json') as f:
   data = json.load(f)
-  URL = data['LOCAL_URL']
-  print(type(data))
+  URL = data['HEROKU_URL']
+  BOARD_ID = data['BOARD_ID']
+  print(URL)
 
 def record():
 
@@ -64,6 +66,12 @@ def record_to_file(file_path):
 	wf.writeframes(b''.join(frames))
 	wf.close()
 
+def create_checkList(name):
+	print(name)
+	print(description)
+	r = requests.post(URL+'/api/trello/createCheckList', data = {'checklistName': name,'boardId': BOARD_ID})
+	print(r)
+
 def create_card(name, description):
 	print(name)
 	print(description)
@@ -101,6 +109,12 @@ def convert_to_text(file_path):
 				if words[i] == 'description':
 					description_flag = True
 			create_card(name, description)
+		elif words[1] == 'checklist' :
+			name = ''
+			for i in range(2,len(words)):
+				name += words[i]
+				name += ' '
+			create_checkList(name)
 	else:
 		print('Invalid Speech')
 
