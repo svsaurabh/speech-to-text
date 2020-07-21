@@ -97,6 +97,12 @@ def create_board(name):
 	r = requests.post(URL+'/api/trello/createBoard', data = {'boardName': name})
 	print('Please configure id: '+json.loads(r.content.decode('utf-8'))['id']+' for board: '+json.loads(r.content.decode('utf-8'))['name'])
 
+def update_board(name):
+	print(name)
+	r = requests.post(URL+'/api/trello/updateBoard', data = {'boardName': name,'boardId': BOARD_ID,'desc': 'New description'})
+	print('Changed board name : '+json.loads(r.content.decode('utf-8'))['name'])
+
+
 def create_card(name, description):
 	print(name)
 	print(description)
@@ -155,6 +161,13 @@ def convert_to_text(file_path):
 	elif words[0] == 'delete':
 		if words[1] == 'board':
 			delete_board()
+	elif words[0] == 'update':
+		if words[1] == 'board':
+			name = ''
+			for i in range(2,len(words)):
+				name += words[i].title()
+				name += ' '
+			update_board(name)
 	else:
 		print('Invalid Speech')
 
@@ -171,7 +184,7 @@ if __name__ == '__main__':
 		exit()
 	if choice == 2:
 		print('Please specify the file path with .wav extention')
-		file_path = 'G:\Working\OutputAudio\searchCard\output.wav'#input()
+		file_path = 'G:\Working\OutputAudio\\updateBoard\output.wav'#input()
 	else :
 		print("Please speak word(s) into the microphone")
 		print('Press Ctrl+C to stop the recording')
