@@ -70,7 +70,6 @@ def record_to_file(file_path):
 
 def create_checkList(name):
 	print(name)
-	print(description)
 	r = requests.post(URL+'/api/trello/createCheckList', data = {'checklistName': name,'boardId': BOARD_ID})
 	print(r)
 
@@ -100,7 +99,7 @@ def convert_to_text(file_path):
 			name = ''
 			for i in range(2,len(words)):
 				if name_flag == True:
-					name += words[i]
+					name += words[i].title()
 					name += ' '
 				if description_flag == True:
 					description += words[i]
