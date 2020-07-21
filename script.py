@@ -68,21 +68,33 @@ def record_to_file(file_path):
 	wf.writeframes(b''.join(frames))
 	wf.close()
 
+def delete_board():
+	print('Deleting current Board ...')
+	r = requests.delete(URL+'/api/trello/deleteBoard', data = {'boardId': BOARD_ID})
+	if r.status_code == 200:
+		print('Deleted Successfully')
+
+
+def search_checklist():
+	print('Searching current Check List ...')
+	r = requests.get(URL+'/api/trello/searchCheckList', params = {'id': CHECK_LIST_ID})
+	print('Current Check List Name : '+json.loads(r.content.decode('utf-8'))['name'])
+
 def create_checkList(name):
 	print(name)
 	r = requests.post(URL+'/api/trello/createCheckList', data = {'checklistName': name,'boardId': BOARD_ID})
-	print(r)
+	print('Please configure id: '+json.loads(r.content.decode('utf-8'))['id']+' for Check list: '+json.loads(r.content.decode('utf-8'))['name'])
 
 def create_board(name):
 	print(name)
 	r = requests.post(URL+'/api/trello/createBoard', data = {'boardName': name})
-	print(r)
+	print('Please configure id: '+json.loads(r.content.decode('utf-8'))['id']+' for board: '+json.loads(r.content.decode('utf-8'))['name'])
 
 def create_card(name, description):
 	print(name)
 	print(description)
 	r = requests.post(URL+'/api/trello/createCard', data = {'name': name,'description': description,'listId': CHECK_LIST_ID})
-	print(r)
+	print('Card Created Successfully')
 
 def convert_to_text(file_path):
 	filename = file_path
@@ -128,6 +140,12 @@ def convert_to_text(file_path):
 				name += words[i].title()
 				name += ' '
 			create_board(name)
+	elif words[0] == 'search':
+		if words[1] == 'checklist':
+			search_checklist()
+	elif words[0] == 'delete':
+		if words[1] == 'board':
+			delete_board()
 	else:
 		print('Invalid Speech')
 
@@ -144,7 +162,7 @@ if __name__ == '__main__':
 		exit()
 	if choice == 2:
 		print('Please specify the file path with .wav extention')
-		file_path = 'G:\Working\output.wav'#input()
+		file_path = 'G:\Working\OutputAudio\searchCheckList\output.wav'#input()
 	else :
 		print("Please speak word(s) into the microphone")
 		print('Press Ctrl+C to stop the recording')
