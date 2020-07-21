@@ -1,5 +1,6 @@
 {
     "LOCAL_URL": "http://localhost:8000",
     "HEROKU_URL" : "http://trello-api-node.herokuapp.com",
-    "BOARD_ID": "5f170ced99015a8f4c760658"
+    "BOARD_ID": "5f170ced99015a8f4c760658",
+    "CHECK_LIST_ID":"5f171517f6dbbc55bd351402"
 }

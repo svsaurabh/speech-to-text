@@ -15,11 +15,13 @@ RATE = 44100
 RECORD_SECONDS = 5
 URL = ''
 BOARD_ID = ''
+CHECK_LIST_ID = ''
 
 with open('./config.json') as f:
   data = json.load(f)
   URL = data['HEROKU_URL']
   BOARD_ID = data['BOARD_ID']
+  CHECK_LIST_ID = data['CHECK_LIST_ID']
   print(URL)
 
 def record():
@@ -75,7 +77,7 @@ def create_checkList(name):
 def create_card(name, description):
 	print(name)
 	print(description)
-	r = requests.post(URL+'/api/trello/createCard', data = {'name': name,'description': description})
+	r = requests.post(URL+'/api/trello/createCard', data = {'name': name,'description': description,'listId': CHECK_LIST_ID})
 	print(r)
 
 def convert_to_text(file_path):
@@ -103,11 +105,11 @@ def convert_to_text(file_path):
 				if description_flag == True:
 					description += words[i]
 					description += ' '
-				if words[i] == 'is':
-					if words[i-1] == 'name':
-						name_flag = True
+				if words[i] == 'name':
+					name_flag = True
 				if words[i] == 'description':
 					description_flag = True
+					name_flag = False
 			create_card(name, description)
 		elif words[1] == 'checklist' :
 			name = ''
