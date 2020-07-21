@@ -98,6 +98,8 @@ def convert_to_text(file_path):
 			description = ''
 			name = ''
 			for i in range(2,len(words)):
+				if words[i] == 'description'::
+					name_flag = False
 				if name_flag == True:
 					name += words[i].title()
 					name += ' '
@@ -108,7 +110,6 @@ def convert_to_text(file_path):
 					name_flag = True
 				if words[i] == 'description':
 					description_flag = True
-					name_flag = False
 			create_card(name, description)
 		elif words[1] == 'checklist' :
 			name = ''
