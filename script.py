@@ -113,7 +113,7 @@ def convert_to_text(file_path):
 		elif words[1] == 'checklist' :
 			name = ''
 			for i in range(2,len(words)):
-				name += words[i]
+				name += words[i].title()
 				name += ' '
 			create_checkList(name)
 	else:
