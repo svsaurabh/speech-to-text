@@ -16,12 +16,14 @@ RECORD_SECONDS = 5
 URL = ''
 BOARD_ID = ''
 CHECK_LIST_ID = ''
+CARD_ID = ''
 
 with open('./config.json') as f:
   data = json.load(f)
   URL = data['HEROKU_URL']
   BOARD_ID = data['BOARD_ID']
   CHECK_LIST_ID = data['CHECK_LIST_ID']
+  CARD_ID = data['CARD_ID']
   print(URL)
 
 def record():
@@ -80,6 +82,11 @@ def search_checklist():
 	r = requests.get(URL+'/api/trello/searchCheckList', params = {'id': CHECK_LIST_ID})
 	print('Current Check List Name : '+json.loads(r.content.decode('utf-8'))['name'])
 
+def search_card():
+	print('Searching current Card ...')
+	r = requests.get(URL+'/api/trello/searchCard', params = {'cardId': CARD_ID})
+	print('Current Card Name : '+json.loads(r.content.decode('utf-8'))['name'])
+
 def create_checkList(name):
 	print(name)
 	r = requests.post(URL+'/api/trello/createCheckList', data = {'checklistName': name,'boardId': BOARD_ID})
@@ -94,7 +101,7 @@ def create_card(name, description):
 	print(name)
 	print(description)
 	r = requests.post(URL+'/api/trello/createCard', data = {'name': name,'description': description,'listId': CHECK_LIST_ID})
-	print('Card Created Successfully')
+	print('Card Created Successfully\n Id : '+json.loads(r.content.decode('utf-8'))['id'])
 
 def convert_to_text(file_path):
 	filename = file_path
@@ -143,6 +150,8 @@ def convert_to_text(file_path):
 	elif words[0] == 'search':
 		if words[1] == 'checklist':
 			search_checklist()
+		elif words[1] == 'card':
+			search_card()
 	elif words[0] == 'delete':
 		if words[1] == 'board':
 			delete_board()
@@ -162,7 +171,7 @@ if __name__ == '__main__':
 		exit()
 	if choice == 2:
 		print('Please specify the file path with .wav extention')
-		file_path = 'G:\Working\OutputAudio\searchCheckList\output.wav'#input()
+		file_path = 'G:\Working\OutputAudio\searchCard\output.wav'#input()
 	else :
 		print("Please speak word(s) into the microphone")
 		print('Press Ctrl+C to stop the recording')
