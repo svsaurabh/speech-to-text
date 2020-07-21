@@ -101,6 +101,8 @@ def convert_to_text(file_path):
 				if words[i] == 'description':
 					description_flag = True
 			create_card(name, description)
+	else:
+		print('Invalid Speech')
 
 
 
