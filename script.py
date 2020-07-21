@@ -73,6 +73,11 @@ def create_checkList(name):
 	r = requests.post(URL+'/api/trello/createCheckList', data = {'checklistName': name,'boardId': BOARD_ID})
 	print(r)
 
+def create_board(name):
+	print(name)
+	r = requests.post(URL+'/api/trello/createBoard', data = {'boardName': name})
+	print(r)
+
 def create_card(name, description):
 	print(name)
 	print(description)
@@ -98,7 +103,7 @@ def convert_to_text(file_path):
 			description = ''
 			name = ''
 			for i in range(2,len(words)):
-				if words[i] == 'description'::
+				if words[i] == 'description':
 					name_flag = False
 				if name_flag == True:
 					name += words[i].title()
@@ -117,6 +122,12 @@ def convert_to_text(file_path):
 				name += words[i].title()
 				name += ' '
 			create_checkList(name)
+		elif words[1] == 'board':
+			name = ''
+			for i in range(2,len(words)):
+				name += words[i].title()
+				name += ' '
+			create_board(name)
 	else:
 		print('Invalid Speech')
 
